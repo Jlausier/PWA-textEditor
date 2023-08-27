@@ -9,9 +9,9 @@ window.addEventListener('beforeinstallprompt', (event) => {
 });
 
 // TODO: Implement a click event handler on the `butInstall` element
-butInstall.addEventListener('click', async () => {
+butInstall.addEventListener('click', async (event) => {
     installButton.style.display = 'none'; // Hide the custom install button
-    e.prompt(); // Show the native installation prompt
+    event.prompt(); // Show the native installation prompt
     const choiceResult = await event.userChoice;
     if (choiceResult.outcome === 'accepted') {
       console.log('User accepted the installation');
@@ -24,5 +24,5 @@ butInstall.addEventListener('click', async () => {
 // TODO: Add an handler for the `appinstalled` event
 window.addEventListener('appinstalled', (event) => {
     console.log('App was successfully installed');
-    // You can perform additional actions here, such as showing a thank you message
+  
 });

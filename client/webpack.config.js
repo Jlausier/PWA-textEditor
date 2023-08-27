@@ -18,12 +18,53 @@ module.exports = () => {
       path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
-      
+      new HtmlWebpackPlugin({
+        template: './src/index.html', // Your HTML template file
+        chunks: ['main'], // Specify the entry chunk(s) to include in the HTML
+      }),
+
+      // Configure the WebpackPwaManifest plugin for generating the manifest file
+      new WebpackPwaManifest({
+        name: 'My PWA',
+        short_name: 'PWA',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#ffffff',
+        theme_color: '#000000',
+        icons: [
+          {
+            src: path.resolve('src/icon.png'),
+            sizes: [96, 128, 192, 256, 384, 512],
+          },
+        ],
+      }),
+
+      // Configure the InjectManifest plugin for adding the service worker
+      new InjectManifest({
+        swSrc: './src/sw.js', // Path to your service worker source file
+        exclude: [/\.map$/, /_redirects/], // Add exclusions if needed
+      }),
     ],
 
     module: {
       rules: [
-        
+        // Add CSS loader rules here
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+
+        // Add Babel loader rule here
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env'],
+            },
+          },
+        },
       ],
     },
   };
