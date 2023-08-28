@@ -17,9 +17,9 @@ export const putDb = async (content) => {
   const db = await openDB('jate', 1);
   const tx = db.transaction('jate', 'readwrite');
   const store = tx.objectStore('jate');
-  await store.put(content);
-  await tx.complete;
-  console.log('Content added to the database:', content);
+  const req =  store.put({id:1, value:content});
+  const result = await req;
+  console.log('Content added to the database:', result.value);
 };
 
 // TODO: Add logic for a method that gets all the content from the database
@@ -27,7 +27,7 @@ export const getDb = async () => {
   const db = await openDB('jate', 1);
   const tx = db.transaction('jate', 'readonly');
   const store = tx.objectStore('jate');
-  const content = await store.getAll();
+  const content = await store.get(1);
   return content;
 };
 initdb();

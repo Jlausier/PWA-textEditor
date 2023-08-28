@@ -19,30 +19,34 @@ module.exports = () => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './src/index.html', // Your HTML template file
-        chunks: ['main'], // Specify the entry chunk(s) to include in the HTML
+        template: './index.html', 
+        
       }),
 
       // Configure the WebpackPwaManifest plugin for generating the manifest file
       new WebpackPwaManifest({
+        fingerprints: false,
+        inject: true,
         name: 'My PWA',
         short_name: 'PWA',
         start_url: '/',
+        publicPath: './',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#000000',
         icons: [
           {
-            src: path.resolve('src/icon.png'),
+            src: path.resolve('src/images/logo.png'),
             sizes: [96, 128, 192, 256, 384, 512],
+            destination: path.join('assets', 'icons'),
           },
         ],
       }),
 
       // Configure the InjectManifest plugin for adding the service worker
       new InjectManifest({
-        swSrc: './src/sw.js', // Path to your service worker source file
-        exclude: [/\.map$/, /_redirects/], // Add exclusions if needed
+        swSrc: './src-sw.js',// Path to your service worker source file
+        swDest: 'src-sw.js',
       }),
     ],
 
@@ -56,12 +60,14 @@ module.exports = () => {
 
         // Add Babel loader rule here
         {
-          test: /\.js$/,
+          test: /\.m?js$/,
           exclude: /node_modules/,
+          // We use babel-loader in order to use ES6.
           use: {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env'],
+              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/transform-runtime'],
             },
           },
         },
